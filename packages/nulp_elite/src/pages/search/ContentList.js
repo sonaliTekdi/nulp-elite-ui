@@ -203,22 +203,22 @@ const ContentList = (props) => {
           ...(contentTypeFilter.length > 0
             ? { primaryCategory: contentTypeFilter }
             : {
-                primaryCategory: [
-                  "Collection",
-                  "Resource",
-                  "Course",
-                  "eTextbook",
-                  "Explanation Content",
-                  "Learning Resource",
-                  "Practice Question Set",
-                  "ExplanationResource",
-                  "Practice Resource",
-                  "Exam Question",
-                  "Good Practices",
-                  "Reports",
-                  "Manual/SOPs",
-                ],
-              }),
+              primaryCategory: [
+                "Collection",
+                "Resource",
+                "Course",
+                "eTextbook",
+                "Explanation Content",
+                "Learning Resource",
+                "Practice Question Set",
+                "ExplanationResource",
+                "Practice Resource",
+                "Exam Question",
+                "Good Practices",
+                "Reports",
+                "Manual/SOPs",
+              ],
+            }),
           // ...(domainfilter.se_board
           //   ? { board: domainfilter.se_board }
           //   : domainName
@@ -231,8 +231,8 @@ const ContentList = (props) => {
           ...(domainfilter.se_board
             ? { se_boards: domainfilter.se_board }
             : domainName
-            ? { se_boards: [domainName] }
-            : {}),
+              ? { se_boards: [domainName] }
+              : {}),
           se_gradeLevels:
             subDomainFilter && subDomainFilter.length > 0
               ? subDomainFilter
@@ -429,6 +429,8 @@ const ContentList = (props) => {
     });
   };
 
+
+
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
     console.log("value", event.target.value);
@@ -446,9 +448,17 @@ const ContentList = (props) => {
     // fetchData();
   };
 
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
+  useEffect(() => {
+    if (localStorage.getItem('playerVisited') === 'true') {
+      console.log("ContentList: playerVisited is true, refreshing page");
+      localStorage.removeItem('playerVisited');
+      window.location.reload();
+    } else {
+      console.log("ContentList: playerVisited is not true");
+    }
+  }, [location.search]);
+
+
 
   return (
     <div>
@@ -544,11 +554,7 @@ const ContentList = (props) => {
                   }}
                   className="text-blueShade2 h4-custom"
                 >
-                  {domainName || searchQuery
-                    ? `${searchQuery || ""}${
-                        searchQuery && domainName ? ", " : ""
-                      }${domainName || ""}`
-                    : ""}
+                  {[searchQuery, domainName].filter(Boolean).join(', ')}
                 </Box>
               </Box>
             ) : (
